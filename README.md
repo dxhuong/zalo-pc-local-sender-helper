@@ -1,49 +1,65 @@
-# Zalo PC CSV Sender
+# Zalo PC Local Sender Helper
 
-Bộ script này dùng Zalo PC trên Windows để đọc danh sách `phone,message` từ CSV, tìm từng số điện thoại trong Zalo PC, dán nội dung, rồi gửi tin.
+Công cụ local trên Windows để đọc danh sách `phone,message` từ CSV, tìm từng số điện thoại trong Zalo PC, dán nội dung và gửi tin.
 
-Phù hợp cho việc test hoặc thao tác có kiểm soát trên tài khoản cá nhân. Không nên dùng để spam, nhắn người lạ hàng loạt, hoặc vượt giới hạn nền tảng.
+Đây là công cụ không chính thức, không liên kết với Zalo/VNG. Người dùng tự chịu trách nhiệm tuân thủ điều khoản dịch vụ và pháp luật liên quan. Không dùng để spam, nhắn người lạ hàng loạt, quấy rối, scraping, hoặc vượt giới hạn nền tảng.
 
-Đây là công cụ không chính thức, không liên kết với Zalo/VNG. Người dùng tự chịu trách nhiệm tuân thủ điều khoản dịch vụ và pháp luật liên quan.
+## Cách Chạy Bằng Codex
 
-## Cách dùng nhanh với Codex
+Mở Codex trên máy Windows cần cài, rồi gửi prompt này:
 
-1. Copy hoặc giải nén toàn bộ thư mục này vào máy Windows.
-2. Mở Codex tại thư mục đó.
-3. Mở file `CODEX_QUICK_PROMPT.md`, copy prompt trong đó và gửi cho Codex.
-4. Sửa file `contacts.csv` theo danh sách thật.
-5. Mở Zalo PC, đăng nhập, để cửa sổ Zalo không bị thu nhỏ.
-6. Bảo Codex chạy `run_confirm.ps1` hoặc `run_auto_slow.ps1`.
+```text
+Hãy cài và chạy repo GitHub này trên máy Windows:
 
-## Cài đặt thủ công
+https://github.com/dxhuong/zalo-pc-local-sender-helper
 
-Mở PowerShell trong thư mục này rồi chạy:
-
-```powershell
-.\install_windows.ps1
+Yêu cầu:
+1. Clone repo về máy.
+2. Vào thư mục repo.
+3. Chạy .\install_windows.ps1 để cài Python và dependency nếu thiếu.
+4. Kiểm tra contacts.csv bằng .\run_check.ps1.
+5. Hướng dẫn tôi sửa contacts.csv với cột phone,message.
+6. Nhắc tôi mở Zalo PC, đăng nhập, và để cửa sổ Zalo không bị minimize.
+7. Khi tôi xác nhận đã mở Zalo, chạy .\run_confirm.ps1 nếu tôi muốn xác nhận từng tin, hoặc .\run_auto_slow.ps1 nếu tôi muốn gửi tự động chậm.
+8. Nếu có lỗi, đọc zalo_sender.log và sửa tiếp.
 ```
 
-Nếu Windows chặn chạy `.ps1`, chạy lệnh này trong đúng cửa sổ PowerShell đó:
+Sau khi Codex cài xong, sửa file:
+
+```text
+contacts.csv
+```
+
+Rồi bảo Codex:
+
+```text
+chạy có xác nhận
+```
+
+hoặc:
+
+```text
+chạy tự động chậm
+```
+
+## Cách Cài Thủ Công
+
+Mở PowerShell rồi chạy:
 
 ```powershell
+git clone https://github.com/dxhuong/zalo-pc-local-sender-helper.git
+cd zalo-pc-local-sender-helper
 Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
-```
-
-Sau đó chạy lại:
-
-```powershell
 .\install_windows.ps1
 ```
 
-## Chuẩn bị danh sách gửi
+## Chuẩn Bị CSV
 
 File chính là:
 
 ```text
 contacts.csv
 ```
-
-Nếu chưa có, script cài đặt sẽ tự tạo từ `contacts_template.csv`.
 
 Định dạng:
 
@@ -55,13 +71,15 @@ phone,message
 
 Số điện thoại có thể có khoảng trắng, script sẽ tự chuẩn hóa về dạng số liền.
 
-## Kiểm tra CSV
+Kiểm tra CSV:
 
 ```powershell
 .\run_check.ps1
 ```
 
-## Chạy có xác nhận từng tin
+## Chạy Có Xác Nhận
+
+Mở Zalo PC, đăng nhập, để cửa sổ Zalo không bị thu nhỏ, rồi chạy:
 
 ```powershell
 .\run_confirm.ps1
@@ -75,7 +93,9 @@ k = bỏ qua
 q = dừng
 ```
 
-## Chạy tự động chậm
+## Chạy Tự Động Chậm
+
+Mở Zalo PC, đăng nhập, để cửa sổ Zalo không bị thu nhỏ, rồi chạy:
 
 ```powershell
 .\run_auto_slow.ps1
@@ -87,7 +107,7 @@ Mặc định lệnh này:
 - Nghỉ 2-6 giây trước khi bấm gửi.
 - Nghỉ 20-45 giây giữa các tin.
 
-## Khi có lỗi
+## Khi Có Lỗi
 
 Lỗi được ghi vào:
 
@@ -95,17 +115,17 @@ Lỗi được ghi vào:
 zalo_sender.log
 ```
 
-Trong Codex, chỉ cần nhắn:
+Trong Codex, nhắn:
 
 ```text
 đọc zalo_sender.log và sửa lỗi
 ```
 
-## Các file chính
+## Các File Chính
 
 - `zalo_csv_sender.py`: script điều khiển Zalo PC.
-- `contacts.csv`: danh sách thật để gửi, có thể tự tạo.
-- `contacts_template.csv`: mẫu CSV sạch để chia sẻ.
+- `contacts.csv`: danh sách thật để gửi.
+- `contacts_template.csv`: mẫu CSV sạch.
 - `install_windows.ps1`: cài Python và thư viện.
 - `run_check.ps1`: kiểm tra CSV.
 - `run_confirm.ps1`: chạy có xác nhận từng tin.
